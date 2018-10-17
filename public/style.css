@@ -1,0 +1,29 @@
+
+
+#map{
+	margin-left: auto;
+    margin-right: auto;
+    width:90%;
+    height: 650px;
+}
+#cover{
+	margin:20px;
+}
+
+#print{
+  margin:20px;
+}
+#btn{
+  margin:20px;
+}
+
+.cnt{
+	border:1px solid; 
+	height:20px;
+	width:100px;
+	display:inline-block;
+}
+
+.resultBlank{
+	display:inline-block;
+}

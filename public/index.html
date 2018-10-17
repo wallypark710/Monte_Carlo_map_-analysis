@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="UTF-8">
+      <title>Monte Carlo Map</title>
+      <link rel="stylesheet" href="style.css">
+
+      <script src="jquery.js"></script>
+      <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=YOUR_KEY&submodules=geocoder"></script>
+      <!--<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&libraries=geometry"></script>-->    
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <div id='cover'>
+      <div id="btn">
+        <button id='addBtn10'>10</button>
+        <button id='addBtn20'>20</button>
+        <button id='addBtn50'>50</button>
+        <button id='addBtn100'>100</button>
+      
+        <button id='addBtn200'>200</button>
+        <button id='addBtn500'>500</button>
+        <button id='addBtn1000'>1000</button>  
+      </div>
+    
+      <div id="print">
+        <div class="resultBlank">
+          <div>Point Count</div>
+          <div id="cntPoint" class="cnt" ></div>
+        </div>
+      
+        <div class="resultBlank">
+          <div>Total Station</div>
+          <div id="totalStop" class="cnt"></div>
+        </div>
+      
+        <div class="resultBlank">
+          <div>Result</div>
+          <div id='result' class="cnt"></div>    
+        </div>
+    </div>
+
+    
+   </div>
+    
+
+    <script src="/main.js"></script>
+    
+
+  </body>
+</html>
