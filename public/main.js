@@ -1,6 +1,5 @@
 
 var data = {
-	subStopNum : 24,
 	subwayLoation : [
 			{ xpoint_wgs : 37.484147, ypoint_wgs : 127.034631,"station_nm":"양재","fr_code":"D8"},
 			{ xpoint_wgs : 37.489116, ypoint_wgs : 127.066140,"station_nm":"개포동","fr_code":"k219"},
@@ -25,7 +24,14 @@ var data = {
 			{ xpoint_wgs : 37.511093, ypoint_wgs : 127.021415,"station_nm":"논현","fr_code":"732"},
 			{ xpoint_wgs : 37.527381, ypoint_wgs : 127.040534,"station_nm":"압구정로데오","fr_code":"K212"},
 			{ xpoint_wgs : 37.527072, ypoint_wgs : 127.028461,"station_nm":"압구정","fr_code":"336"},
-			{ xpoint_wgs : 37.516334, ypoint_wgs : 127.020114,"station_nm":"신사","fr_code":"337"}
+			{ xpoint_wgs : 37.516334, ypoint_wgs : 127.020114,"station_nm":"신사","fr_code":"337"},
+			{ xpoint_wgs : 37.512759, ypoint_wgs : 127.011220,"station_nm":"잠원","fr_code":"338"},
+			{ xpoint_wgs : 37.508178, ypoint_wgs : 127.011727,"station_nm":"반포","fr_code":"733"},
+			{ xpoint_wgs : 37.504206, ypoint_wgs : 127.015259,"station_nm":"사평","fr_code":"924"},
+			{ xpoint_wgs : 37.504810, ypoint_wgs : 127.004943,"station_nm":"고속터미널","fr_code":"923"},
+			{ xpoint_wgs : 37.493415, ypoint_wgs : 127.014080,"station_nm":"교대","fr_code":"223"},
+			{ xpoint_wgs : 37.491897, ypoint_wgs : 127.007917,"station_nm":"서초","fr_code":"224"},
+			{ xpoint_wgs : 37.485013, ypoint_wgs : 127.016189,"station_nm":"남부터미널","fr_code":"341"}
 		]	
 }
 
@@ -158,7 +164,7 @@ var createCircle = function(){
 var InRangeSubway = function(targetPoint){
 	var cnt = 0;
 
-	for( var i=0; i< data.subStopNum; i++ ){
+	for( var i=0; i< data.subwayLoation.length; i++ ){
 		var temp = new naver.maps.LatLng(data.subwayLoation[i].xpoint_wgs, data.subwayLoation[i].ypoint_wgs);
 		if( distance(targetPoint, temp) <= targetRadius ){
 			cnt++;
@@ -170,37 +176,64 @@ var InRangeSubway = function(targetPoint){
 
 var pointArray = [];
 
+var extractPoint = function(num){
+	
+	var randLocation;
+	var cntPoint = 0;
+	var totalStop = 0;
+
+	pointArray.forEach(function(ele){ ele.setMap(null) });
+	pointArray.splice(0,pointArray.length);
+	
+	while(1){
+		if( cntPoint === num){
+			break;
+		}
+		randLocation = createCircle();
+
+		if( randLocation >= 0 ){
+			cntPoint++;
+			totalStop += randLocation;
+		}
+	}
+
+	var result = totalStop/cntPoint;
+
+	$("#cntPoint").text(cntPoint);
+	$("#totalStop").text(totalStop);
+	$("#result").text(result.toFixed(4));
+}
+
 $(document).ready(function(){
 	initMap();
-	var randLocation;
+	
 
 	$('#addBtn10').click(function(){
+		extractPoint(10);
+	});
 
-		pointArray.forEach(function(ele){ ele.setMap(null) });
-		pointArray.splice(0,pointArray.length);
+	$('#addBtn20').click(function(){
+		extractPoint(20);
+	});
 
-		var cnt = 0;
-		var cntPoint = 0;
-		var totalStop = 0;
+	$('#addBtn50').click(function(){
+		extractPoint(50);
+	});
 
-		while(1){
-			if( cnt === 10){
-				break;
-			}
-			randLocation = createCircle();
+	$('#addBtn100').click(function(){
+		extractPoint(100);
+	});
 
-			if( randLocation >= 0 ){
-				cnt++;
-				cntPoint++;
-				totalStop += randLocation;
-			}
-		}
+	$('#addBtn200').click(function(){
+		extractPoint(200);
+	});
 
-		var result = totalStop/cntPoint;
+	$('#addBtn500').click(function(){
+		extractPoint(500);
+	});
 
-		$("#cntPoint").text(cntPoint);
-		$("#totalStop").text(totalStop);
-		$("#result").text(result.toFixed(4));	
+	$('#addBtn1000').click(function(){
+		extractPoint(1000);
 	});
 
 })
