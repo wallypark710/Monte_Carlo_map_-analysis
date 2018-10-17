@@ -33,40 +33,68 @@ var GANGNAM = new naver.maps.LatLng(37.497899, 127.027556);
 var SAMSUNG = new naver.maps.LatLng(37.508890, 127.063151);
 
 
-var map = new naver.maps.Map('map', {
-	center: GANGNAM,
-	zoom: 9
-});
+
+var center_1 = new naver.maps.LatLng(37.507284, 127.033917);
+var basisCircleRadius = 3000;
+var targetRadius = 333;
+var map;
+var wholeRange;
+
+var initMap = function(){
+	map = new naver.maps.Map('map', {
+		center: center_1,
+		zoom: 9
+	});
+
+	wholeRange = range();
+
+	$("#cntPoint").text('');
+	$("#totalStop").text('');
+	$("#result").text('');
+}
+	
 
 var range = function (){
 	//37.535170, 126.872166  37.509036, 126.843110 목동
 	//37.524884, 127.065899 37.483483, 127.025807 강남
-	var basisBounds_NE = new naver.maps.LatLng(37.524884, 127.065899);
-	var basisBounds_SW = new naver.maps.LatLng(37.483483, 127.025807);
 
-	var coverBounds_NE = basisBounds_NE.destinationPoint(45, 600);
-	var coverBounds_SW = basisBounds_SW.destinationPoint(225, 600);
-
-
-	var basisRectangle = new naver.maps.Rectangle({
+	var basisCircle = new naver.maps.Circle({
 	    map: map,
-	    bounds: new naver.maps.LatLngBounds(
-	        basisBounds_NE,
-	        basisBounds_SW
-	    )
+	    center: center_1,
+	    radius: basisCircleRadius,
+
+	    strokeColor: '#5347AA',
+	    strokeOpacity: 0.5,
+	    strokeWeight: 2
 	});
 
-	var coverRectangle = new naver.maps.Rectangle({
+	var coverCircle = new naver.maps.Circle({
 	    map: map,
-	    bounds: new naver.maps.LatLngBounds(
-	        coverBounds_NE,
-	        coverBounds_SW
-	    )
+	    center: center_1,
+	    radius: basisCircleRadius + targetRadius,
+
+	    strokeColor: '#5347AA',
+	    strokeOpacity: 0.5,
+	    strokeWeight: 2
 	});
 
-	return {basis : basisRectangle, cover : coverRectangle};
+
+
+	var marker1 = new naver.maps.Marker({
+		map: map,
+		position: basisCircle.getBounds().getNE()
+	})
+
+
+	var marker2 = new naver.maps.Marker({
+		map: map,
+		position: basisCircle.getBounds().getSW()
+	})
+
+	return {basis : basisCircle, cover : coverCircle};
+	
 }
-var wholeRange = range();
+
 
 
 var distance = function(point_1, point_2){
@@ -83,10 +111,10 @@ var getRandomInt = function(from, end ){
 
 var getRandomLocation = function(){
 	
-	var E = wholeRange.basis.bounds.east();
-	var W = wholeRange.basis.bounds.west();
-	var S = wholeRange.basis.bounds.south();
-	var N = wholeRange.basis.bounds.north();
+	var E = wholeRange.basis.getBounds().east();
+	var W = wholeRange.basis.getBounds().west();
+	var S = wholeRange.basis.getBounds().south();
+	var N = wholeRange.basis.getBounds().north();
 
 	E = (E-127)*1000000;
 	W = (W-127)*1000000;
@@ -98,21 +126,33 @@ var getRandomLocation = function(){
 	return result;
 }
 
+var inRange = function(location, center){
+	if( basisCircleRadius >= distance(location, center) ){
+		return true;
+	}
+	return false;
+}
+
 var createCircle = function(){
 	
 	var location = getRandomLocation();
 
-	var circle = new naver.maps.Circle({
-	    map: map,
-	    center: location,
-	    radius: 400,
+	if( inRange(location, wholeRange.basis.getCenter()) ){
+		var circle = new naver.maps.Circle({
+		    map: map,
+		    center: location,
+		    radius: targetRadius,
 
-	    strokeColor: '#5347AA',
-	    strokeOpacity: 0.5,
-	    strokeWeight: 2,
-	});
+		    strokeColor: '#5347AA',
+		    strokeOpacity: 0.5,
+		    strokeWeight: 2,
+		});	
 
-	return InRangeSubway(location);
+		pointArray.push(circle);
+		return InRangeSubway(location);
+	}
+
+	return -1;
 }
 
 var InRangeSubway = function(targetPoint){
@@ -120,7 +160,7 @@ var InRangeSubway = function(targetPoint){
 
 	for( var i=0; i< data.subStopNum; i++ ){
 		var temp = new naver.maps.LatLng(data.subwayLoation[i].xpoint_wgs, data.subwayLoation[i].ypoint_wgs);
-		if( distance(targetPoint, temp) <= 400 ){
+		if( distance(targetPoint, temp) <= targetRadius ){
 			cnt++;
 		}
 	}
@@ -128,25 +168,39 @@ var InRangeSubway = function(targetPoint){
 	return cnt;
 }
 
-
+var pointArray = [];
 
 $(document).ready(function(){
-	var cntClick = 0;
-	var sumOfStopCnt = 0;
+	initMap();
+	var randLocation;
 
-	$('#addBtn').click(function(){
-		cntClick++;
-		var result = createCircle();
-		sumOfStopCnt += result;
-		$("#cntClick").text(cntClick);
-		$("#cntStop").text(result);
+	$('#addBtn10').click(function(){
+
+		pointArray.forEach(function(ele){ ele.setMap(null) });
+		pointArray.splice(0,pointArray.length);
+
+		var cnt = 0;
+		var cntPoint = 0;
+		var totalStop = 0;
+
+		while(1){
+			if( cnt === 10){
+				break;
+			}
+			randLocation = createCircle();
+
+			if( randLocation >= 0 ){
+				cnt++;
+				cntPoint++;
+				totalStop += randLocation;
+			}
+		}
+
+		var result = totalStop/cntPoint;
+
+		$("#cntPoint").text(cntPoint);
+		$("#totalStop").text(totalStop);
+		$("#result").text(result.toFixed(4));	
 	});
 
-	$('#resultBtn').click(function(){
-		var result = sumOfStopCnt/cntClick;
-		$(".result").text(result.toFixed(4));
-	})
-
 })
-
-
