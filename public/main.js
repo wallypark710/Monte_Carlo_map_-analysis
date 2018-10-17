@@ -1,6 +1,6 @@
 
 var data = {
-	subwayLoation : [
+	subwayLocation : [
 			{ xpoint_wgs : 37.484147, ypoint_wgs : 127.034631,"station_nm":"양재","fr_code":"D8"},
 			{ xpoint_wgs : 37.489116, ypoint_wgs : 127.066140,"station_nm":"개포동","fr_code":"k219"},
 			{ xpoint_wgs : 37.486839, ypoint_wgs : 127.058856,"station_nm":"구룡","fr_code":"k218"},
@@ -38,10 +38,9 @@ var data = {
 var GANGNAM = new naver.maps.LatLng(37.497899, 127.027556);
 var SAMSUNG = new naver.maps.LatLng(37.508890, 127.063151);
 
+var center_1 = new naver.maps.LatLng(37.507284, 127.033917); // 언주역
 
-
-var center_1 = new naver.maps.LatLng(37.507284, 127.033917);
-var basisCircleRadius = 3000;
+var basisCircleRadius = 3000;   
 var targetRadius = 333;
 var map;
 var wholeRange;
@@ -164,8 +163,8 @@ var createCircle = function(){
 var InRangeSubway = function(targetPoint){
 	var cnt = 0;
 
-	for( var i=0; i< data.subwayLoation.length; i++ ){
-		var temp = new naver.maps.LatLng(data.subwayLoation[i].xpoint_wgs, data.subwayLoation[i].ypoint_wgs);
+	for( var i=0; i< data.subwayLocation.length; i++ ){
+		var temp = new naver.maps.LatLng(data.subwayLocation[i].xpoint_wgs, data.subwayLocation[i].ypoint_wgs);
 		if( distance(targetPoint, temp) <= targetRadius ){
 			cnt++;
 		}

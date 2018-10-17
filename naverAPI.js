@@ -166,7 +166,7 @@ var InRangeSubway = function(targetPoint){
 	var cnt = 0;
 
 	for( var i=0; i< data.subwayLocation.length; i++ ){
-		var temp = new naver.maps.LatLng(data.subwayLoation[i].xpoint_wgs, data.subwayLoation[i].ypoint_wgs);
+		var temp = new naver.maps.LatLng(data.subwayLocation[i].xpoint_wgs, data.subwayLocation[i].ypoint_wgs);
 		if( distance(targetPoint, temp) <= targetRadius ){
 			cnt++;
 		}
