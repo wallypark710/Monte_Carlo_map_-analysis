@@ -6,14 +6,20 @@
       <link rel="stylesheet" href="style.css">
 
       <script src="jquery.js"></script>
-      <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=YOUR_KEY&submodules=geocoder"></script>
-      <!--<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&libraries=geometry"></script>-->    
+      <script src="stopData.js"></script>
+
+      <!--<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=YOUR_ID&submodules=geocoder"></script>-->
+      <!--<script src="https://maps.googleapis.com/maps/api/js?key=Your_Key&libraries=geometry"></script>-->
+
   </head>
   <body>
     <div id="map"></div>
 
     <div id='cover'>
       <div id="btn">
+
+        <input type="number" id ='textbox'>
+
         <button id='addBtn10'>10</button>
         <button id='addBtn20'>20</button>
         <button id='addBtn50'>50</button>
@@ -41,12 +47,9 @@
         </div>
     </div>
 
-    
    </div>
     
-
-    <script src="/main.js"></script>
-    
+    <script src="main.js"></script>  <!-- 배포시 /main -->    
 
   </body>
 </html>
