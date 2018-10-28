@@ -79,28 +79,23 @@ function distance(point_1, point_2){
   return result;
 }
 
-function getRandomInt(from, end ){
-  return parseInt( Math.random() * ( end - from ) + from );
+function getRandom(from, end ){
+  return Math.random() * ( end - from ) + from;
 }
 
 function getRandomLocation(){
   
-  var basisBounds_NE = base.basis.getBounds().getNorthEast();
-  var basisBounds_SW = base.basis.getBounds().getSouthWest();
+  var temp = RadiusLatLng*10000000000000;
+  var R = parseInt(getRandom(0,temp));
+  R = R/10000000000000;
+
+  var sub = getRandom(-RadiusLatLngSub, RadiusLatLngSub);
+  var theta = getRandom(0, 2*pi);
   
-  var N = basisBounds_NE.lat();
-  var S = basisBounds_SW.lat();
-  var E = basisBounds_NE.lng();
-  var W = basisBounds_SW.lng();
-
-  E = (E-127)*1000000;
-  W = (W-127)*1000000;
-  S = (S-37)*1000000;
-  N = (N-37)*1000000;
-
-  var result = new google.maps.LatLng(37+(getRandomInt(N,S)/1000000), 127+(getRandomInt(E,W))/1000000 );
+  var result = new google.maps.LatLng( R*Math.cos(theta) + base.basis.getCenter().lat(), R*Math.sin(theta) + base.basis.getCenter().lng() + sub );
 
   return result;
+
 }
 
 function inRange(location, center){
