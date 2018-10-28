@@ -1,20 +1,33 @@
 
 var basisCircleRadius = 3000;
-var targetRadius = 1000;
+var targetRadius = 200;
 var map;
 var base;
 var infowindow;
 
-var center_1 = new google.maps.LatLng(48.869216, 2.309427); //"Franklin D. Roosevelt"
+var pi = 3.14159265358979323846;
+var RadiusLatLng = 0.0269494585236; //3km
+var RadiusLatLngSub = 0.0070229049849;
 
-var center_2 = new google.maps.LatLng(48.876950, 2.406763); //"Porte des Lilas"
-var center_3 = new google.maps.LatLng(48.841068, 2.552274); //"Noisy-le-Grand - Mont d'Est"
-var center_4 = new google.maps.LatLng(48.985128, 2.257849); //"Gare de Cernay"
-//var center_5 = new google.maps.LatLng(48.891803, 2.238690); //"Gare de La Défense"
-var center_5 = new google.maps.LatLng(48.909583, 2.239795);
+
+// var center_1 = new google.maps.LatLng(48.869216, 2.309427); //"Franklin D. Roosevelt"
+// var center_2 = new google.maps.LatLng(48.876950, 2.406763); //"Porte des Lilas"
+// var center_3 = new google.maps.LatLng(48.985128, 2.257849); //"Gare de Cernay"
+// var center_4 = new google.maps.LatLng(48.909583, 2.239795); //"Gare de La Défense"
+
+
+var center_1 = new google.maps.LatLng(37.507284, 127.033917); // 언주역
+var center_2 = new google.maps.LatLng(37.564718, 126.977108); // 시청역
+var center_3 = new google.maps.LatLng(37.655128, 127.061368); // 노원역
+
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {zoom: 13, center: center_1});
+
+    var centerMarker = new google.maps.Marker({
+    	map: map,
+    	position: center_1
+    })
 
 ////////////////////////////// sampling code ///////////////////////////////////////
 //you should block this code when runing main code//
@@ -33,17 +46,17 @@ function initMap() {
     base = range();
 }
 
-function createMarker(point){
-	var marker = new google.maps.Marker({
-		map: map,
-		position : point.geometry.location
-	});
+// function createMarker(point){
+// 	var marker = new google.maps.Marker({
+// 		map: map,
+// 		position : point.geometry.location
+// 	});
 
-	google.maps.event.addListener(marker,'click',function(){
-		infowindow.setContent(point.name);
-		infowindow.open(map,this);
-	})
-}
+// 	google.maps.event.addListener(marker,'click',function(){
+// 		infowindow.setContent(point.name);
+// 		infowindow.open(map,this);
+// 	})
+// }
 
 function range (){
   var basisCircle = new google.maps.Circle({
@@ -53,7 +66,7 @@ function range (){
       fillOpacity:0,
 
       map: map,
-      center: center_5,
+      center: center_1,
       radius: basisCircleRadius
     });
 
@@ -64,7 +77,7 @@ function range (){
         fillOpacity:0,
 
         map: map,
-        center: center_5,
+        center: center_1,
         radius: basisCircleRadius + targetRadius
 
     });
@@ -94,27 +107,21 @@ function distance(point_1, point_2){
   return result;
 }
 
-function getRandomInt(from, end ){
-  return parseInt( Math.random() * ( end - from ) + from );
+function getRandom(from, end ){
+  return Math.random() * ( end - from ) + from;
 }
 
 
 function getRandomLocation(){
   
-  var basisBounds_NE = base.basis.getBounds().getNorthEast();
-  var basisBounds_SW = base.basis.getBounds().getSouthWest();
+  var temp = RadiusLatLng*10000000000000;
+  var R = parseInt(getRandom(0,temp));
+  R = R/10000000000000;
+
+  var sub = getRandom(-RadiusLatLngSub, RadiusLatLngSub);
+  var theta = getRandom(0, 2*pi);
   
-  var N = basisBounds_NE.lat();
-  var S = basisBounds_SW.lat();
-  var E = basisBounds_NE.lng();
-  var W = basisBounds_SW.lng();
-
-  E = (E-127)*1000000;
-  W = (W-127)*1000000;
-  S = (S-37)*1000000;
-  N = (N-37)*1000000;
-
-  var result = new google.maps.LatLng(37+(getRandomInt(N,S)/1000000), 127+(getRandomInt(E,W))/1000000 );
+  var result = new google.maps.LatLng( R*Math.cos(theta) + base.basis.getCenter().lat(), R*Math.sin(theta) + base.basis.getCenter().lng() + sub );
 
   return result;
 }
@@ -197,7 +204,7 @@ $(document).ready(function(){
   $('#textbox').on('keypress',function(event){
   	if(event.keyCode === 13){
   		var inputNumber = $('#textbox').val();
-
+  		
   		extractPoint(Number(inputNumber));
   	}
   });
@@ -205,6 +212,7 @@ $(document).ready(function(){
   $('#addBtn10').click(function(){
     extractPoint(10);
   });
+
 
   $('#addBtn20').click(function(){
     extractPoint(20);
