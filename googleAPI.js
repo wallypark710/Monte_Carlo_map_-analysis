@@ -98,33 +98,23 @@ function getRandomLocation(){
 
 }
 
-function inRange(location, center){
-  if( basisCircleRadius >= distance(location, center) ){
-    return true;
-  }
-  return false;
-}
 
 function createCircle(){
 
   var location = getRandomLocation();
+  
+  var randomLocationCircle = new google.maps.Circle({
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
 
-  if( inRange(location, base.basis.getCenter()) ){
-    var randomLocationCircle = new google.maps.Circle({
-      strokeColor: '#FF0000',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
+    map: map,
+    center: location,
+    radius: targetRadius
+  });
 
-      map: map,
-      center: location,
-      radius: targetRadius
-    });
-
-    pointArray.push(randomLocationCircle);
-    return InRangeSubway(location);
-  }
-
-  return -1;
+  pointArray.push(randomLocationCircle);
+  return InRangeSubway(location);
 }
 
 function InRangeSubway(targetPoint){
