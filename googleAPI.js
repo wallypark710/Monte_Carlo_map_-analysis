@@ -5,6 +5,10 @@ var targetRadius = 1000;
 var map;
 var base;
 
+var pi = 3.14159265358979323846;
+var RadiusLatLng = 0.0269494585236; //3km
+var RadiusLatLngSub = 0.0070229049849;
+
 var center_1 = new google.maps.LatLng(48.869216, 2.309427); //"Franklin D. Roosevelt"
 
 
@@ -85,14 +89,14 @@ function getRandom(from, end ){
 
 function getRandomLocation(){
   
-  var temp = RadiusLatLng*10000000000000;
-  var R = parseInt(getRandom(0,temp));
-  R = R/10000000000000;
+  var R = getRandom(0,1);
+  R = Math.sqrt(R)*RadiusLatLng;
+
+  var theta = getRandom(0, 2*pi);
 
   var sub = getRandom(-RadiusLatLngSub, RadiusLatLngSub);
-  var theta = getRandom(0, 2*pi);
   
-  var result = new google.maps.LatLng( R*Math.cos(theta) + base.basis.getCenter().lat(), R*Math.sin(theta) + base.basis.getCenter().lng() + sub );
+  var result = new google.maps.LatLng( R*Math.sin(theta) + base.basis.getCenter().lat() , R*Math.cos(theta) + base.basis.getCenter().lng() + sub );
 
   return result;
 
@@ -102,7 +106,7 @@ function getRandomLocation(){
 function createCircle(){
 
   var location = getRandomLocation();
-  
+
   var randomLocationCircle = new google.maps.Circle({
     strokeColor: '#FF0000',
     strokeOpacity: 0.8,

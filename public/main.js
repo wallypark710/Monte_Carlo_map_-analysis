@@ -3,7 +3,6 @@ var basisCircleRadius = 3000;
 var targetRadius = 200;
 var map;
 var base;
-var infowindow;
 
 var pi = 3.14159265358979323846;
 var RadiusLatLng = 0.0269494585236; //3km
@@ -108,20 +107,20 @@ function distance(point_1, point_2){
 }
 
 function getRandom(from, end ){
-  return Math.random() * ( end - from ) + from;
+  	return Math.random()*(end-from) + from;
 }
 
 
 function getRandomLocation(){
   
-  var temp = RadiusLatLng*10000000000000;
-  var R = parseInt(getRandom(0,temp));
-  R = R/10000000000000;
+  var R = getRandom(0,1);
+  R = Math.sqrt(R)*RadiusLatLng;
+
+  var theta = getRandom(0, 2*pi);
 
   var sub = getRandom(-RadiusLatLngSub, RadiusLatLngSub);
-  var theta = getRandom(0, 2*pi);
   
-  var result = new google.maps.LatLng( R*Math.cos(theta) + base.basis.getCenter().lat(), R*Math.sin(theta) + base.basis.getCenter().lng() + sub );
+  var result = new google.maps.LatLng( R*Math.sin(theta) + base.basis.getCenter().lat() , R*Math.cos(theta) + base.basis.getCenter().lng() + sub );
 
   return result;
 }
